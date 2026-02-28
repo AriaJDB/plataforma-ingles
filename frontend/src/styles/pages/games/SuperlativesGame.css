@@ -1,0 +1,102 @@
+.game-container {
+  min-height: 100vh;
+  padding: 30px;
+  font-family: "Century Gothic", sans-serif;
+  background:
+    radial-gradient(#c9a86a 1px, transparent 1px),
+    #fdf6e9;
+  background-size: 25px 25px;
+  text-align: center;
+}
+
+.game-title {
+  font-size: 36px;
+  margin-bottom: 20px;
+  color: #6b4f2a;
+}
+
+.sentence {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 40px;
+}
+
+/* Zona drop */
+.drop-zone {
+  display: inline-block;
+  min-width: 140px;
+  padding: 10px 20px;
+  border: 3px dashed #666;
+  border-radius: 12px;
+  background: white;
+  transition: 0.3s;
+  font-weight: bold;
+}
+
+.drop-zone.hovered {
+  background: #fff3cd;
+  transform: scale(1.08);
+}
+
+/* Opciones */
+.options {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.option {
+  padding: 12px 20px;
+  border-radius: 14px;
+  font-weight: bold;
+  cursor: grab;
+  user-select: none;
+  transition: 0.3s;
+  color: white;
+}
+
+/* Cada respuesta color distinto */
+.option:nth-child(1) { background: #ff7675; }
+.option:nth-child(2) { background: #74b9ff; }
+.option:nth-child(3) { background: #55efc4; }
+.option:nth-child(4) { background: #fdcb6e; }
+
+.option:active {
+  transform: scale(1.1) rotate(-2deg);
+  cursor: grabbing;
+}
+
+/* Feedback */
+.feedback {
+  font-size: 26px;
+  margin-top: 20px;
+  font-weight: bold;
+  animation: pop 0.6s ease;
+}
+
+.correct { color: green; }
+.incorrect { color: red; }
+
+@keyframes pop {
+  0% { transform: scale(0); }
+  80% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* Confetti simple */
+.confetti {
+  font-size: 20px;
+  margin-top: 10px;
+  animation: pop 0.8s ease;
+}
+
+/* Pantalla final */
+.final-screen {
+  margin-top: 40px;
+  padding: 25px;
+  background: white;
+  border-radius: 20px;
+  display: inline-block;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
