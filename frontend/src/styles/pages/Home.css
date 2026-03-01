@@ -1,58 +1,97 @@
-/* Fuente general */
 .home-container {
-  font-family: "Century Gothic", sans-serif;
-  text-align: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #e0f7ff, #ffffff);
-  padding-top: 60px;
-}
-
-/* Título principal */
-.home-title {
-  font-size: 2.5rem;
-  color: #333;
-  margin-bottom: 40px;
-}
-
-/* Botón dashboard */
-.dashboard-btn {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  text-decoration: none;
-  background: #444;
-  color: white;
-  padding: 8px 15px;
-  border-radius: 8px;
-  transition: 0.3s;
-}
-
-.dashboard-btn:hover {
-  background: #222;
-}
-
-/* Contenedor juegos */
-.games-container {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-}
-
-/* Botones juegos */
-.game-btn {
+  background: radial-gradient(circle, #ffffff 0%, #f0f7ff 100%);
+  padding: 40px 20px;
   font-family: "Century Gothic", sans-serif;
-  font-size: 18px;
-  padding: 15px 30px;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  background: linear-gradient(45deg, #00c6ff, #0072ff);
-  color: white;
-  transition: 0.3s;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
 }
 
-.game-btn:hover {
-  transform: scale(1.08);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+.top-nav {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.teacher-access-btn {
+  text-decoration: none;
+  color: #666;
+  font-size: 14px;
+  padding: 8px 16px;
+  border: 2px solid #ddd;
+  border-radius: 20px;
+  transition: all 0.3s;
+}
+
+.teacher-access-btn:hover {
+  background: #c0c0c0;
+  border-color: #999;
+}
+
+.home-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.home-title {
+  font-size: 3.5rem;
+  color: #ff6b6b;
+  margin-bottom: 10px;
+}
+
+.home-subtitle {
+  font-size: 1.2rem;
+  color: #54a0ff;
+  font-weight: bold;
+}
+
+/* Contenedor de Juegos */
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 30px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Tarjetas de Juego Generales */
+.game-card {
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  border-radius: 25px;
+  color: white;
+  font-weight: bold;
+  font-size: 1.4rem;
+  box-shadow: 0 10px 0px rgba(0,0,0,0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 4px solid rgba(255,255,255,0.3);
+}
+
+.game-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 20px rgba(0,0,0,0.15);
+}
+
+.game-icon {
+  font-size: 4rem;
+  margin-bottom: 15px;
+}
+
+/* Colores por Juego */
+.memory { background-color: #ff9f43; } /* Naranja */
+.superlatives { background-color: #5f27cd; } /* Púrpura */
+.spelling { background-color: #1dd1a1; } /* Verde */
+.vocabulary { background-color: #ff6b6b; } /* Rojo/Rosa */
+
+/* Animación simple al entrar */
+@keyframes bounceIn {
+  0% { transform: scale(0.5); opacity: 0; }
+  70% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.game-card {
+  animation: bounceIn 0.5s ease-out;
 }

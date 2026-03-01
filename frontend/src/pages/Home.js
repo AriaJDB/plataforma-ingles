@@ -4,29 +4,40 @@ import "../styles/pages/Home.css";
 function Home() {
   return (
     <div className="home-container">
+      {/* Botón dashboard - Manteniendo un estilo diferente para la profesora */}
+      <nav className="top-nav">
+        <Link to="/dashboard" className="teacher-access-btn">
+          Teacher Dashboard 🍎
+        </Link>
+      </nav>
 
-      {/* Botón dashboard */}
-      <Link to="/dashboard" className="dashboard-btn">
-        Dashboard profesora
-      </Link>
+      <header className="home-header">
+        <h1 className="home-title">Educational Games</h1>
+        <p className="home-subtitle">Choose a game and start learning!</p>
+      </header>
 
-      <h1 className="home-title">
-        Juegos educativos
-      </h1>
-
-      <div className="games-container">
-        <Link to="/memorama">
-          <button className="game-btn">
-            Memory Game
-          </button>
+      <div className="games-grid">
+        <Link to="/memorama" className="game-card memory">
+          <div className="game-icon">🧠</div>
+          <span className="game-name">Memory Game</span>
         </Link>
 
-        <Link to="/superlatives">
-          <button className="game-btn">Superlatives Game</button>
+        <Link to="/superlatives" className="game-card superlatives">
+          <div className="game-icon">🏆</div>
+          <span className="game-name">Superlatives</span>
         </Link>
 
+        {/* Ejemplo de cómo se verían los futuros juegos */}
+        <Link to="/spelling" className="game-card spelling">
+          <div className="game-icon">🐝</div>
+          <span className="game-name">Spelling Bee</span>
+        </Link>
+
+        <Link to="/vocabulary" className="game-card vocabulary">
+          <div className="game-icon">📚</div>
+          <span className="game-name">Vocabulary</span>
+        </Link>
       </div>
-
     </div>
   );
 }

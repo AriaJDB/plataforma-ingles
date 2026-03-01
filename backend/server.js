@@ -16,6 +16,7 @@ app.use("/verbs",require ("./routes/verbs"))
 app.use("/adjectives",require ("./routes/adjectives"))
 app.use("/nouns",require ("./routes/nouns"))
 app.use("/game-manager", require("./routes/gameManager"));
+app.use("/stats", require("./routes/stats"));
 
 app.listen(3001, () => {
   console.log("Servidor activo en puerto 3001");

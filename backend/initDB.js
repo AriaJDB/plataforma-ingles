@@ -13,6 +13,7 @@ db.serialize(() => {
       category TEXT,
       topic TEXT,
       page INTEGER,
+      phonetic TEXT,
       is_active INTEGER DEFAULT 1
     )
   `);
@@ -22,6 +23,7 @@ db.serialize(() => {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       english TEXT NOT NULL,
       spanish TEXT NOT NULL,
+      phonetic TEXT,
       is_active INTEGER DEFAULT 1
     )
   `);
@@ -31,9 +33,12 @@ db.serialize(() => {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       spanish TEXT NOT NULL,
       present TEXT NOT NULL,
-      past TEXT NOT NULL,
+      past_simple TEXT NOT NULL,
       past_participle TEXT NOT NULL,
-      type TEXT CHECK(type IN ('regular','irregular')) NOT NULL,
+      gerund TEXT NOT NULL,
+      third_person TEXT NOT NULL,
+      phonetic TEXT NOT NULL,
+      type TEXT CHECK(type IN ('REGULAR','IRREGULAR')) NOT NULL,
       is_active INTEGER DEFAULT 1
     )
   `);
@@ -43,6 +48,8 @@ db.serialize(() => {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       spanish TEXT NOT NULL,
       english TEXT NOT NULL,
+      plural TEXT NOT NULL,
+      phonetic TEXT NOT NULL,
       is_active INTEGER DEFAULT 1
     )
   `);
@@ -52,6 +59,9 @@ db.serialize(() => {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       spanish TEXT NOT NULL,
       english TEXT NOT NULL,
+      comparative TEXT NOT NULL,
+      superlative TEXT NOT NULL,
+      phonetic TEXT NOT NULL,
       is_active INTEGER DEFAULT 1
     )
   `);
