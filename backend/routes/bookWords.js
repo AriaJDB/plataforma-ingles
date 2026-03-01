@@ -41,6 +41,7 @@ router.post("/", upload.single("image"), (req, res) => {
   }
 
   const englishUpper = english.toUpperCase();
+  const phoneticUpper = phonetic ? phonetic.toUpperCase() : "";
 
   db.run(
     `INSERT INTO book_words 
@@ -54,7 +55,7 @@ router.post("/", upload.single("image"), (req, res) => {
       category,
       topic,
       page,
-      phonetic,
+      phoneticUpper,
       is_active || 1
     ],
     function (err) {
@@ -82,13 +83,14 @@ router.post("/", upload.single("image"), (req, res) => {
 router.put("/:id", upload.single("image"), (req, res) => {
   const { english, spanish, month, week, category, topic, page, phonetic, is_active } = req.body;
   const englishUpper = english.toUpperCase();
+  const phoneticUpper = phonetic ? phonetic.toUpperCase() : "";
 
   db.run(
     `UPDATE book_words 
      SET english=?, spanish=?, month=?, week=?, category=?, topic=?, page=?, phonetic=?, is_active=?
 
      WHERE id=?`,
-    [englishUpper, spanish.toUpperCase(), month, week, category, topic, page, phonetic, is_active, req.params.id],
+    [englishUpper, spanish.toUpperCase(), month, week, category, topic, page, phoneticUpper, is_active, req.params.id],
     err => {
       if (err) {
         if (req.file) fs.unlinkSync(req.file.path);

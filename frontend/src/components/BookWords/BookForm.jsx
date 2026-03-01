@@ -112,7 +112,7 @@ export default function BookForm({ onUpdate }) {
             type="text"
         placeholder="Phonetic"
         value={phonetic}
-        onChange={e => setPhonetic(e.target.value)}
+        onChange={e => setPhonetic(e.target.value.toUpperCase())}
       />
 
       <input

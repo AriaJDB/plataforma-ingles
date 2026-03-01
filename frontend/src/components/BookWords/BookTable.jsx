@@ -191,7 +191,7 @@ export default function BookTable({ refreshTrigger }) {
                   type="text"
                   value={editData.phonetic}
                   onChange={e =>
-                    setEditData({ ...editData, phonetic: e.target.value })
+                    setEditData({ ...editData, phonetic: e.target.value.toUpperCase() })
                   }
                 />
               ) : (
