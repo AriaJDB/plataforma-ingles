@@ -5,6 +5,8 @@ const API = "http://localhost:3001";
 export default function NounForm({ onUpdate }) {
   const [spanish, setSpanish] = useState("");
   const [english, setEnglish] = useState("");
+  const [plural, setPlural] = useState("");
+  const [phonetic, setPhonetic] = useState("");
   const [image, setImage] = useState(null);
 
   const handleSubmit = async (e) => {
@@ -14,6 +16,8 @@ export default function NounForm({ onUpdate }) {
     // Campos de texto primero
     formData.append("spanish", spanish.toUpperCase());
     formData.append("english", english.toUpperCase());
+    formData.append("plural", plural.toUpperCase());
+    formData.append("phonetic", phonetic.toUpperCase());
     formData.append("is_active", 1);
 
     // Imagen al final
@@ -30,6 +34,8 @@ export default function NounForm({ onUpdate }) {
       if (response.ok) {
         setSpanish("");
         setEnglish("");
+        setPlural("");
+        setPhonetic("");
         setImage(null);
         if (onUpdate) onUpdate();
       } else {
@@ -48,7 +54,7 @@ export default function NounForm({ onUpdate }) {
         type="text"
         placeholder="Spanish"
         value={spanish}
-        onChange={(e) => setSpanish(e.target.value)}
+        onChange={(e) => setSpanish(e.target.value.toUpperCase())}
         required
       />
 
@@ -56,8 +62,22 @@ export default function NounForm({ onUpdate }) {
         type="text"
         placeholder="English"
         value={english}
-        onChange={(e) => setEnglish(e.target.value)}
+        onChange={(e) => setEnglish(e.target.value.toUpperCase())}
         required
+      />
+
+      <input
+        type="text"
+        placeholder="Plural"
+        value={plural}
+        onChange={(e) => setPlural(e.target.value.toUpperCase())}
+      />
+
+      <input
+        type="text"
+        placeholder="Phonetic"
+        value={phonetic}
+        onChange={(e) => setPhonetic(e.target.value.toUpperCase())}
       />
 
       <input

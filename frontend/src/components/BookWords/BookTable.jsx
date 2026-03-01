@@ -55,6 +55,7 @@ export default function BookTable({ refreshTrigger }) {
           <th>Category</th>
           <th>Topic</th>
           <th>Page</th>
+          <th>Phonetic</th>
           <th>Status</th>
           <th>Actions</th>
         </tr>
@@ -180,6 +181,21 @@ export default function BookTable({ refreshTrigger }) {
                 />
               ) : (
                 w.page
+              )}
+            </td>
+
+            {/* PHONETIC */}
+            <td>
+              {editingId === w.id ? (
+                <input
+                  type="text"
+                  value={editData.phonetic}
+                  onChange={e =>
+                    setEditData({ ...editData, phonetic: e.target.value })
+                  }
+                />
+              ) : (
+                w.phonetic
               )}
             </td>
 

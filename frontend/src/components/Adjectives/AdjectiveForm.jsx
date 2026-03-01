@@ -56,7 +56,7 @@ export default function AdjectiveForm({ onUpdate }) {
         type="text"
         placeholder="Spanish"
         value={spanish}
-        onChange={(e) => setSpanish(e.target.value)}
+        onChange={(e) => setSpanish(e.target.value.toUpperCase())}
         required
       />
 

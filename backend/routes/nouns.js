@@ -52,8 +52,8 @@ router.post("/", upload.single("image"), (req, res) => {
   const englishUpper = english.toUpperCase();
 
   db.run(
-    "INSERT INTO nouns (spanish, english, is_active) VALUES (?, ?, ?)",
-    [spanish ? spanish.toUpperCase() : "", englishUpper, is_active || 1],
+    "INSERT INTO nouns (spanish, english,plural,phonetic, is_active) VALUES (?, ?, ?, ?, ?)",
+    [spanish ? spanish.toUpperCase() : "", englishUpper, req.body.plural ? req.body.plural.toUpperCase() : "", req.body.phonetic ? req.body.phonetic.toUpperCase() : "", is_active || 1],
     function (err) {
       if (err) {
         if (req.file) fs.unlinkSync(req.file.path);
@@ -76,12 +76,12 @@ router.post("/", upload.single("image"), (req, res) => {
 
 // PUT
 router.put("/:id", upload.single("image"), (req, res) => {
-  const { spanish, english, is_active } = req.body;
+  const { spanish, english, plural, phonetic, is_active } = req.body;
   const englishUpper = english.toUpperCase();
 
   db.run(
-    "UPDATE nouns SET spanish=?, english=?, is_active=? WHERE id=?",
-    [spanish.toUpperCase(), englishUpper, is_active, req.params.id],
+    "UPDATE nouns SET spanish=?, english=?, plural=?, phonetic=?, is_active=? WHERE id=?",
+    [spanish.toUpperCase(), englishUpper, plural ? plural.toUpperCase() : "", phonetic ? phonetic.toUpperCase() : "", is_active, req.params.id],
     err => {
       if (err) {
         if (req.file) fs.unlinkSync(req.file.path);

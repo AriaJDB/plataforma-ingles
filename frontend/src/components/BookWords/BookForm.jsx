@@ -10,6 +10,7 @@ export default function BookForm({ onUpdate }) {
   const [category, setCategory] = useState("VOCABULARY");
   const [topic, setTopic] = useState("GENERAL");
   const [page, setPage] = useState(1);
+  const [phonetic, setPhonetic] = useState("");
   const [image, setImage] = useState(null);
 
   const handleSubmit = async e => {
@@ -24,6 +25,7 @@ export default function BookForm({ onUpdate }) {
     formData.append("category", category);
     formData.append("topic", topic);
     formData.append("page", page);
+    formData.append("phonetic", phonetic.toUpperCase());
     formData.append("is_active", 1);
 
     // Imagen al final
@@ -38,6 +40,7 @@ export default function BookForm({ onUpdate }) {
       if (response.ok) {
         setSpanish("");
         setEnglish("");
+        setPhonetic("");
         if (onUpdate) onUpdate();
       } else {
         alert("Error al guardar la palabra");
@@ -52,6 +55,7 @@ export default function BookForm({ onUpdate }) {
       <h3>Agregar Book Word</h3>
 
       <input
+      type="text"
         placeholder="English"
         value={english}
         onChange={e => setEnglish(e.target.value.toUpperCase())}
@@ -59,6 +63,7 @@ export default function BookForm({ onUpdate }) {
       />
 
       <input
+      type="text"
         placeholder="Spanish"
         value={spanish}
         onChange={e => setSpanish(e.target.value.toUpperCase())}
@@ -101,6 +106,12 @@ export default function BookForm({ onUpdate }) {
         value={page}
         min="1"
         onChange={e => setPage(e.target.value)}
+      />
+
+            <input
+        placeholder="Phonetic"
+        value={phonetic}
+        onChange={e => setPhonetic(e.target.value)}
       />
 
       <input

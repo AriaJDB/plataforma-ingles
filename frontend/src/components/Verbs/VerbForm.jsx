@@ -7,6 +7,9 @@ export default function VerbForm({ onUpdate }) {
   const [present, setPresent] = useState("");
   const [past, setPast] = useState("");
   const [pastParticiple, setPastParticiple] = useState("");
+  const [gerund, setGerund] = useState("");
+  const [thirdPerson, setThirdPerson] = useState("");
+  const [phonetic, setPhonetic] = useState("");
   const [type, setType] = useState("regular");
   const [image, setImage] = useState(null);
 
@@ -14,10 +17,13 @@ export default function VerbForm({ onUpdate }) {
     e.preventDefault();
 
     const formData = new FormData();
+    formData.append("spanish", spanish);
     formData.append("present", present);
     formData.append("past", past);
-    formData.append("past_participle", pastParticiple);
-    formData.append("spanish", spanish);
+    formData.append("pastParticiple", pastParticiple);
+    formData.append("gerund", gerund);
+    formData.append("thirdPerson", thirdPerson);
+    formData.append("phonetic", phonetic);
     formData.append("type", type);
 
     if (image) {
@@ -37,6 +43,10 @@ export default function VerbForm({ onUpdate }) {
         setPresent("");
         setPast("");
         setPastParticiple("");
+        setGerund("");
+        setThirdPerson("");
+        setPhonetic("");
+        setType("regular");
         setImage(null);
 
         // 2. Avisamos al padre que algo cambió sin recargar
@@ -54,17 +64,45 @@ export default function VerbForm({ onUpdate }) {
   return (
     <form onSubmit={handleSubmit}>
       <h3>Agregar Verb</h3>
-      <input placeholder="Spanish" value={spanish}
-        onChange={e => setSpanish(e.target.value)} required />
-      <input placeholder="Present" value={present}
-        onChange={e => setPresent(e.target.value)} required />
-      <input placeholder="Past" value={past}
-        onChange={e => setPast(e.target.value)} required />
-      <input placeholder="Past Participle" value={pastParticiple}
-        onChange={e => setPastParticiple(e.target.value)} required />
+      <input
+        placeholder="Spanish"
+        value={spanish}
+        onChange={e => setSpanish(e.target.value)}
+        required />
+
+      <input placeholder="Present"
+        value={present}
+        onChange={e => setPresent(e.target.value)}
+        required />
+
+      <input placeholder="Past"
+        value={past}
+        onChange={e => setPast(e.target.value)}
+        required />
+
+      <input placeholder="Past Participle"
+        value={pastParticiple}
+        onChange={e => setPastParticiple(e.target.value)}
+        required />
+
+      <input placeholder="Gerund"
+        value={gerund}
+        onChange={e => setGerund(e.target.value)}
+        required />
+
+      <input placeholder="Third Person"
+        value={thirdPerson}
+        onChange={e => setThirdPerson(e.target.value)}
+        required />
+
+      <input placeholder="Phonetic"
+        value={phonetic}
+        onChange={e => setPhonetic(e.target.value)}
+        required />
+
       <select value={type} onChange={e => setType(e.target.value)}>
-        <option value="regular">REGULAR</option>
-        <option value="irregular">IRREGULAR</option>
+        <option value="REGULAR">REGULAR</option>
+        <option value="IRREGULAR">IRREGULAR</option>
       </select>
       <input type="file" accept="image/*"
         onChange={e => setImage(e.target.files[0])} />

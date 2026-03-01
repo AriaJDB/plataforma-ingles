@@ -33,7 +33,7 @@ router.get("/", (req, res) => {
 
 // POST
 router.post("/", upload.single("image"), (req, res) => {
-  const { english, spanish, month, week, category, topic, page, is_active } = req.body;
+  const { english, spanish, month, week, category, topic, page,phonetic, is_active } = req.body;
 
   if (!english) {
     if (req.file) fs.unlinkSync(req.file.path);
@@ -44,8 +44,8 @@ router.post("/", upload.single("image"), (req, res) => {
 
   db.run(
     `INSERT INTO book_words 
-    (english, spanish, month, week, category, topic, page, is_active)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    (english, spanish, month, week, category, topic, page, phonetic, is_active)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       englishUpper,
       spanish ? spanish.toUpperCase() : "",
@@ -54,6 +54,7 @@ router.post("/", upload.single("image"), (req, res) => {
       category,
       topic,
       page,
+      phonetic,
       is_active || 1
     ],
     function (err) {
@@ -79,14 +80,15 @@ router.post("/", upload.single("image"), (req, res) => {
 
 // PUT
 router.put("/:id", upload.single("image"), (req, res) => {
-  const { english, spanish, month, week, category, topic, page, is_active } = req.body;
+  const { english, spanish, month, week, category, topic, page, phonetic, is_active } = req.body;
   const englishUpper = english.toUpperCase();
 
   db.run(
     `UPDATE book_words 
-     SET english=?, spanish=?, month=?, week=?, category=?, topic=?, page=?, is_active=?
+     SET english=?, spanish=?, month=?, week=?, category=?, topic=?, page=?, phonetic=?, is_active=?
+
      WHERE id=?`,
-    [englishUpper, spanish.toUpperCase(), month, week, category, topic, page, is_active, req.params.id],
+    [englishUpper, spanish.toUpperCase(), month, week, category, topic, page, phonetic, is_active, req.params.id],
     err => {
       if (err) {
         if (req.file) fs.unlinkSync(req.file.path);

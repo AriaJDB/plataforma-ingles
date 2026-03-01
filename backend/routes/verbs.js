@@ -1,13 +1,11 @@
 const express = require("express");
 const multer = require("multer");
 const db = require("../db");
-
-const router = express.Router();
-
 const fs = require("fs");
 const path = require("path");
 
-// 1. Configuración de Multer más simple para evitar el error de "undefined"
+const router = express.Router();
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const dir = "images/verbs/";
@@ -15,62 +13,11 @@ const storage = multer.diskStorage({
     cb(null, dir);
   },
   filename: (req, file, cb) => {
-    // Nombre temporal basado en tiempo para que NO dependa del body aquí
     cb(null, Date.now() + path.extname(file.originalname));
   }
 });
 
 const upload = multer({ storage });
-
-router.post("/", upload.single("image"), (req, res) => {
-  // Verificación de emergencia
-  if (!req.body) {
-    return res.status(400).json({ error: "No se recibieron datos" });
-  }
-
-  const { present, past, past_participle, spanish, type } = req.body;
-
-  // Si después de Multer, present sigue siendo undefined, el problema es el FormData
-  if (!present) {
-    return res.status(400).json({ error: "El campo 'present' no llegó al servidor" });
-  }
-
-  const presentUpper = present.toUpperCase();
-
-  db.run(
-    `INSERT INTO verbs (present, past, past_participle, spanish, type, is_active)
-     VALUES (?, ?, ?, ?, ?, 1)`,
-    [
-      presentUpper,
-      past ? past.toUpperCase() : "",
-      past_participle ? past_participle.toUpperCase() : "",
-      spanish ? spanish.toUpperCase() : "",
-      type
-    ],
-    function (err) {
-      if (err) {
-        // Si hay error en la DB, borramos el archivo temporal subido
-        if (req.file) fs.unlinkSync(req.file.path);
-        return res.status(500).json(err);
-      }
-
-      // 2. Renombrado final: Ahora que la DB aceptó el registro, ponemos el nombre correcto
-      if (req.file) {
-        const ext = path.extname(req.file.originalname);
-        const oldPath = req.file.path;
-        const newPath = path.join("images/verbs/", `${presentUpper}${ext}`);
-
-        // Si ya existe un archivo con ese nombre (ej. sobreescribir), lo borramos antes
-        if (fs.existsSync(newPath)) fs.unlinkSync(newPath);
-        
-        fs.renameSync(oldPath, newPath);
-      }
-
-      res.json({ id: this.lastID });
-    }
-  );
-});
-
 
 router.get("/", (req, res) => {
   db.all("SELECT * FROM verbs", [], (err, rows) => {
@@ -79,23 +26,81 @@ router.get("/", (req, res) => {
   });
 });
 
+router.post("/", upload.single("image"), (req, res) => {
+  if (!req.body || !req.body.present) {
+    return res.status(400).json({ error: "El campo 'present' es obligatorio" });
+  }
 
-router.put("/:id", upload.single("image"), (req, res) => {
-  const { present, past, past_participle, spanish, type, is_active } = req.body;
+  const { spanish, present, past, past_participle, type, gerund, third_person, phonetic } = req.body;
+  const presentUpper = present.toUpperCase();
+  const typeUpper = type.toUpperCase();
 
   db.run(
-    `UPDATE verbs SET present=?, past=?, past_participle=?, spanish=?, type=?, is_active=? WHERE id=?`,
+    `INSERT INTO verbs (spanish, present, past, past_participle, type, gerund, third_person, phonetic, is_active)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)`,
     [
-      present.toUpperCase(),
-      past.toUpperCase(),
-      past_participle.toUpperCase(),
-      spanish.toUpperCase(),
-      type,
+      (spanish || "").toUpperCase(),
+      presentUpper,
+      (past || "").toUpperCase(),
+      (past_participle || "").toUpperCase(),
+      typeUpper,
+      (gerund || "").toUpperCase(),
+      (third_person || "").toUpperCase(),
+      (phonetic || "").toUpperCase()
+    ],
+    function (err) {
+      if (err) {
+        if (req.file) fs.unlinkSync(req.file.path);
+        return res.status(500).json(err);
+      }
+
+      if (req.file) {
+        const ext = path.extname(req.file.originalname);
+        const newPath = path.join("images/verbs/", `${presentUpper}${ext}`);
+        if (fs.existsSync(newPath)) fs.unlinkSync(newPath);
+        fs.renameSync(req.file.path, newPath);
+      }
+      res.json({ id: this.lastID });
+    }
+  );
+});
+
+router.put("/:id", upload.single("image"), (req, res) => {
+  const { spanish, present, past, past_participle, type, gerund, third_person, phonetic, is_active } = req.body;
+
+  // Validación preventiva: si present no existe, no podemos usar toUpperCase
+  if (!present) return res.status(400).json({ error: "Present es requerido" });
+
+  const presentUpper = present.toUpperCase();
+  const typeUpper = type.toUpperCase();
+
+  db.run(
+    `UPDATE verbs 
+     SET spanish=?, present=?, past=?, past_participle=?, type=?, gerund=?, third_person=?, phonetic=?, is_active=? 
+     WHERE id=?`,
+    [
+      (spanish || "").toUpperCase(),
+      presentUpper,
+      (past || "").toUpperCase(),
+      (past_participle || "").toUpperCase(),
+      typeUpper,
+      (gerund || "").toUpperCase(),
+      (third_person || "").toUpperCase(),
+      (phonetic || "").toUpperCase(),
       is_active,
       req.params.id
     ],
-    err => {
+    function (err) {
       if (err) return res.status(500).json(err);
+
+      // Si se subió una nueva imagen al editar, la renombramos con el nombre (posiblemente nuevo) del verbo
+      if (req.file) {
+        const ext = path.extname(req.file.originalname);
+        const newPath = path.join("images/verbs/", `${presentUpper}${ext}`);
+        if (fs.existsSync(newPath)) fs.unlinkSync(newPath);
+        fs.renameSync(req.file.path, newPath);
+      }
+      
       res.json({ message: "UPDATED" });
     }
   );

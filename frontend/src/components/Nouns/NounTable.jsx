@@ -17,8 +17,8 @@ export default function NounTable({ refreshTrigger }) {
     }
   };
 
-  useEffect(() => { 
-    load(); 
+  useEffect(() => {
+    load();
   }, [refreshTrigger]);
 
   const startEdit = (n) => {
@@ -30,6 +30,8 @@ export default function NounTable({ refreshTrigger }) {
     const formData = new FormData();
     formData.append("spanish", editData.spanish.toUpperCase());
     formData.append("english", editData.english.toUpperCase());
+    formData.append("plural", editData.plural.toUpperCase());
+    formData.append("phonetic", editData.phonetic.toUpperCase());
     formData.append("is_active", editData.is_active);
 
     // Si el usuario seleccionó una nueva imagen en el input file
@@ -60,8 +62,9 @@ export default function NounTable({ refreshTrigger }) {
           <th>ID</th>
           <th>Spanish</th>
           <th>English</th>
+          <th>Plural</th>
+          <th>Phonetic</th>
           <th>Status</th>
-          <th>Image Update</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -92,6 +95,30 @@ export default function NounTable({ refreshTrigger }) {
               )}
             </td>
 
+
+
+            <td>
+              {editingId === n.id ? (
+                <input
+                  value={editData.plural}
+                  onChange={(e) => setEditData({ ...editData, plural: e.target.value })}
+                />
+              ) : (
+                n.plural
+              )}
+            </td>
+
+            <td>
+              {editingId === n.id ? (
+                <input
+                  value={editData.phonetic}
+                  onChange={(e) => setEditData({ ...editData, phonetic: e.target.value })}
+                />
+              ) : (
+                n.phonetic
+              )}
+            </td>
+
             <td>
               {editingId === n.id ? (
                 <select
@@ -108,17 +135,6 @@ export default function NounTable({ refreshTrigger }) {
               )}
             </td>
 
-            <td>
-              {editingId === n.id ? (
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => setEditData({ ...editData, newImage: e.target.files[0] })}
-                />
-              ) : (
-                "---"
-              )}
-            </td>
 
             <td>
               {editingId === n.id ? (
