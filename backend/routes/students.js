@@ -13,11 +13,13 @@ router.get("/", (req, res) => {
 
 // POST: Crear nuevo alumno
 router.post("/", (req, res) => {
-  const { firstName, lastName } = req.body;
+  const { firstName, lastName, is_active } = req.body;
+  const firstNameUpper = (firstName || "").toUpperCase();
+  const lastNameUpper = (lastName || "").toUpperCase();
 
   db.run(
-    "INSERT INTO students (firstName, lastName) VALUES (?, ?)",
-    [(firstName || "").toUpperCase(), (lastName || "").toUpperCase()],
+    "INSERT INTO students (firstName, lastName, is_active) VALUES (?, ?, ?)",
+    [firstNameUpper, lastNameUpper, is_active || 1],
     function (err) {
       if (err) return res.status(500).json(err);
       res.json({ id: this.lastID });
@@ -27,12 +29,12 @@ router.post("/", (req, res) => {
 
 // PUT: Editar alumno existente
 router.put("/:id", (req, res) => {
-  const { firstName, lastName } = req.body;
+  const { firstName, lastName, is_active } = req.body;
   const { id } = req.params;
 
   db.run(
-    "UPDATE students SET firstName = ?, lastName = ? WHERE id = ?",
-    [(firstName || "").toUpperCase(), (lastName || "").toUpperCase(), id],
+    "UPDATE students SET firstName = ?, lastName = ?, is_active = ? WHERE id = ?",
+    [(firstName || "").toUpperCase(), (lastName || "").toUpperCase(), is_active || 1, id],
     function (err) {
       if (err) return res.status(500).json(err);
       

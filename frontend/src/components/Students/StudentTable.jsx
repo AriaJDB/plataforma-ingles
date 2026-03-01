@@ -54,6 +54,7 @@ export default function StudentTable({ refreshTrigger }) {
           <th>ID</th>
           <th>Nombre</th>
           <th>Apellido</th>
+          <th>Status</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -78,6 +79,15 @@ export default function StudentTable({ refreshTrigger }) {
                   onChange={e => setEditData({...editData, lastName: e.target.value.toUpperCase()})}
                 />
               ) : s.lastName}
+            </td>
+
+            <td>
+              {editingId === s.id ? (
+                <select value={editData.is_active} onChange={e => setEditData({ ...editData, is_active: parseInt(e.target.value) })}>
+                  <option value={1}>Active</option>
+                  <option value={0}>Inactive</option>
+                </select>
+              ) : s.is_active === 1 ? "Active" : "Inactive"}
             </td>
 
             <td>

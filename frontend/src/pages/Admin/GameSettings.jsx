@@ -1,4 +1,4 @@
-import GameWordManager from "../components/GameManager/GameWordManager";
+import GameWordManager from "../../components/GameManager/GameWordManager";
 
 export default function GameSettings() {
   return (

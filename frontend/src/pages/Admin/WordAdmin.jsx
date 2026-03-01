@@ -1,23 +1,23 @@
 import { useState } from "react";
 
 // Importación de componentes de Negocio
-import BookForm from "../components/BookWords/BookForm";
-import BookTable from "../components/BookWords/BookTable";
+import BookForm from "../../components/BookWords/BookForm";
+import BookTable from "../../components/BookWords/BookTable";
 
-import SpellingForm from "../components/Spelling/SpellingForm";
-import SpellingTable from "../components/Spelling/SpellingTable";
+import SpellingForm from "../../components/Spelling/SpellingForm";
+import SpellingTable from "../../components/Spelling/SpellingTable";
 
-import VerbForm from "../components/Verbs/VerbForm";
-import VerbTable from "../components/Verbs/VerbTable";
+import VerbForm from "../../components/Verbs/VerbForm";
+import VerbTable from "../../components/Verbs/VerbTable";
 
-import NounForm from "../components/Nouns/NounForm";
-import NounTable from "../components/Nouns/NounTable";
+import NounForm from "../../components/Nouns/NounForm";
+import NounTable from "../../components/Nouns/NounTable";
 
-import AdjectiveForm from "../components/Adjectives/AdjectiveForm";
-import AdjectiveTable from "../components/Adjectives/AdjectiveTable";
+import AdjectiveForm from "../../components/Adjectives/AdjectiveForm";
+import AdjectiveTable from "../../components/Adjectives/AdjectiveTable";
 
 // Importación de estilos unificados
-import "../styles/pages/AdminStyles.css";
+import "../../styles/pages/AdminStyles.css";
 
 export default function WordAdmin() {
   const [active, setActive] = useState("book");

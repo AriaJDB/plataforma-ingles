@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import "../styles/pages/AdminStyles.css";
+import "../../styles/pages/AdminStyles.css";
 
 const API = "http://localhost:3001";
 

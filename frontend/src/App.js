@@ -1,12 +1,12 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Dashboard from "./pages/Dashboard";
-import Words from "./pages/WordAdmin";
-import Students from "./pages/Students";
-import Home from "./pages/Home";
-import Teams from "./pages/Teams";
+import Dashboard from "./pages/Admin/Dashboard";
+import Words from "./pages/Admin/WordAdmin";
+import Students from "./pages/Admin/Students";
+import Home from "./pages/Admin/Home";
+import Teams from "./pages/Admin/Teams";
 import MemoryGame from "./pages/games/MemoryGame";
 import SuperlativesGame from "./pages/games/SuperlativesGame";
-import GameSettings from "./pages/GameSettings";
+import GameSettings from "./pages/Admin/GameSettings";
 
 function App() {
   return (

@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import TeamGenerator from "../components/Students/TeamGenerator";
+
+import TeamGenerator from "../../components/Students/TeamGenerator";
 
 function Teams() {
   return (
