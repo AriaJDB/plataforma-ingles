@@ -4,20 +4,16 @@ form {
   padding: 20px 40px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  
-  /* Forzamos el ancho al 98% de la pantalla */
-  width: 98%; 
-  max-width: 1600px; 
+  width: 100%; 
+  max-width: 1500px; 
   margin: 0 auto 30px auto;
-  
-  /* Layout de 4 o 5 columnas para reducir la altura */
   display: grid;
   grid-template-columns: repeat(4, 1fr); 
   gap: 15px;
   align-items: end; /* Alinea los inputs con sus etiquetas abajo */
   border: 1px solid #e1e4e8;
   box-sizing: border-box;
-  margin: 20px;
+  margin-top: 20px;
 }
 
 form h3 {
@@ -34,6 +30,7 @@ form div {
   flex-direction: column;
   align-items: center; /* Centra la label y el input horizontalmente */
   gap: 5px;
+  width: 100%;
 }
 
 form label {
@@ -111,8 +108,8 @@ table {
   background: white;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e1e4e8;
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.20);
+  border: 2px solid #e1e4e8;
 }
 
 thead {
@@ -329,9 +326,101 @@ hr {
   justify-content: center;
 }
 
-.admin-container {
+.admin-container, .student-container {
+  padding: 30px;
   width: 100%;
-  max-width: 1200px; /* Evita que en pantallas ultra-anchas se estire de más */
+  max-width: 1500px; /* Evita que en pantallas ultra-anchas se estire de más */
   background: transparent;
+  justify-self: center;
 }
 
+/*PARA LOS FILTROS*/
+/* Contenedor que centra y separa de los bordes del navegador */
+.manager-wrapper {
+  padding: 40px; 
+  background-color: #f4f7f9; /* Un gris muy tenue para resaltar el blanco */
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+/* La tarjeta blanca principal */
+.manager-container {
+  width: 100%;
+  max-width: 1000px; /* Ancho ideal para lectura y control */
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e1e4e8;
+}
+
+.manager-header {
+  margin-bottom: 25px;
+  border-bottom: 2px solid #f1f3f5;
+  padding-bottom: 15px;
+}
+
+.manager-header h1 {
+  margin: 0;
+  color: #1a1d21;
+  font-size: 24px;
+}
+
+/* Ajuste para los items del menú dentro del gestor */
+.filter-section {
+  background: #fff;
+  border: 1px solid #e1e4e8;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  padding: 15px;
+  transition: all 0.2s;
+}
+
+.filter-section:hover {
+  border-color: #0366d6;
+}
+
+/*PARA EQUIPOS*/
+.teams-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.team-card {
+  background: white;
+  border: 1px solid #e1e4e8;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  animation: fadeIn 0.4s ease;
+}
+
+.team-header {
+  background: #0366d6;
+  color: white;
+  padding: 10px;
+  font-weight: bold;
+  text-align: center;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.team-list {
+  list-style: none;
+  padding: 15px;
+  margin: 0;
+}
+
+.team-list li {
+  padding: 5px 0;
+  border-bottom: 1px solid #f1f3f5;
+  font-size: 13px;
+  color: #24292e;
+}
+
+.team-list li:last-child {
+  border-bottom: none;
+}

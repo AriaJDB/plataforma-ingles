@@ -1,67 +1,31 @@
-import { useEffect, useState } from "react";
-import api from "../services/api";
+import { useState } from "react";
 
-function Students() {
-  const [students, setStudents] = useState([]);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+// Importación de componentes de Negocio
+import StudentForm from "../components/Students/StudentForm";
+import StudentTable from "../components/Students/StudentTable";
 
+// Importación de estilos unificados
+import "../styles/pages/AdminStyles.css";
 
-  useEffect(() => {
-    cargar();
-  }, []);
-
-  const cargar = async () => {
-    const res = await api.get("/students");
-    setStudents(res.data);
-  };
-
-  const guardar = async e => {
-    e.preventDefault();
-
-    await api.post("/students", {
-      firstName,
-      lastName
-    });
-
-    setFirstName("");
-    setLastName("");
-    cargar();
-  };
+export default function Students() {
 
 
   return (
-    <div>
-      <h2>Alumnos</h2>
+    <div className="student-container">
+      <header className="student-header">
+        <h1>Panel de Administración de Estudiantes</h1>
+      </header>
 
-      <form onSubmit={guardar}>
-        <input
-          placeholder="Nombre"
-          value={firstName}
-          onChange={e => setFirstName(e.target.value)}
-        />
+      <div className="student-content">
 
-        <input
-          placeholder="Apellido"
-          value={lastName}
-          onChange={e => setLastName(e.target.value)}
-        />
-
-        <button>Agregar alumno</button>
-      </form>
+        <section className="view-section">
+          <StudentForm />
+          <StudentTable />
+        </section>
 
 
-      <hr />
 
-      <ul>
-        {students.map(s => (
-          <li key={s.id}>
-            {s.firstName} {s.lastName}
-          </li>
-        ))}
-      </ul>
+      </div>
     </div>
   );
 }
-
-export default Students;

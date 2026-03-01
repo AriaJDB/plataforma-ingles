@@ -10,11 +10,12 @@ router.get("/summary", (req, res) => {
 
   db.get(queries.totalWords, [], (err, words) => {
     if (err) return res.status(500).json(err);
-    
-    res.json({
-      words: words.count,
-      students: 25, // Valores estáticos si aún no tienes las tablas
-      teams: 8
+    db.get(queries.totalStudents, [], (err, students) => {
+      if (err) return res.status(500).json(err);
+      res.json({
+        words: words.count,
+        students: students.count
+    });
     });
   });
 });

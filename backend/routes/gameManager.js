@@ -2,69 +2,60 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db");
 
-router.put("/bulk-update", (req, res) => {
-  const { status, tables, bookFilters } = req.body; // status: 1 o 0
+router.put("/bulk-update", async (req, res) => {
+  const { status, tables, bookFilters, idFilters, verbType } = req.body;
 
-  db.serialize(() => {
-    // 1. Procesar tablas simples (Spelling, Verbs, Nouns, Adjectives)
-    const simpleTables = ["spelling_words", "verbs", "nouns", "adjectives"];
-    
-    simpleTables.forEach(table => {
-      // Solo actualiza si la tabla fue seleccionada en el checkbox
-      if (tables[table.split('_')[0]] || tables[table]) {
-        db.run(`UPDATE ${table} SET is_active = ?`, [status]);
-      }
-    });
-
-    // 2. Procesar Book Words con sus filtros específicos
+  try {
+    // 1. Procesar BOOK WORDS
     if (tables.book) {
-      let query = "UPDATE book_words SET is_active = ? WHERE 1=1";
+      let query = "UPDATE book_words SET is_active = ?";
       let params = [status];
 
       if (bookFilters.useRange) {
-        query += " AND month >= ? AND month <= ? AND week >= ? AND week <= ? AND page >= ? AND page <= ?";
-        params.push(
-          bookFilters.startMonth, bookFilters.finishMonth,
-          bookFilters.startWeek, bookFilters.finishWeek,
-          bookFilters.startPage, bookFilters.finishPage
-        );
+        query += ` WHERE month BETWEEN ? AND ? 
+                   AND week BETWEEN ? AND ? 
+                   AND page BETWEEN ? AND ?`;
+        params.push(bookFilters.startMonth, bookFilters.finishMonth, 
+                    bookFilters.startWeek, bookFilters.finishWeek, 
+                    bookFilters.startPage, bookFilters.finishPage);
       }
 
       if (bookFilters.category !== "ALL") {
-        query += " AND category = ?";
+        query += bookFilters.useRange ? " AND category = ?" : " WHERE category = ?";
         params.push(bookFilters.category);
-      }
-
-      if (bookFilters.topic !== "ALL") {
-        query += " AND topic = ?";
-        params.push(bookFilters.topic);
       }
 
       db.run(query, params);
     }
-  });
 
-  res.json({ message: "Proceso de actualización masiva completado" });
-});
+    // 2. Procesar VERBS (Filtro por Tipo)
+    if (tables.verbs) {
+      let query = "UPDATE verbs SET is_active = ?";
+      let params = [status];
+      if (verbType !== "ALL") {
+        query += " WHERE type = ?";
+        params.push(verbType);
+      }
+      db.run(query, params);
+    }
 
-// backend/routes/gameManager.js
-router.get("/active-words", (req, res) => {
-  const query = `
-    SELECT id, english, 'words' as folder FROM book_words WHERE is_active = 1
-    UNION
-    SELECT id, english, 'spelling' as folder FROM spelling_words WHERE is_active = 1
-    UNION
-    SELECT id, present as english, 'verbs' as folder FROM verbs WHERE is_active = 1
-    UNION
-    SELECT id, english, 'nouns' as folder FROM nouns WHERE is_active = 1
-    UNION
-    SELECT id, english, 'adjectives' as folder FROM adjectives WHERE is_active = 1
-  `;
+    // 3. Procesar Tablas con Rango de ID (Spelling, Nouns, Adjectives)
+    const idTables = ["spelling", "nouns", "adjectives"];
+    idTables.forEach(table => {
+      if (tables[table]) {
+        const tableName = table === "spelling" ? "spelling_words" : table;
+        const range = idFilters[table];
+        db.run(
+          `UPDATE ${tableName} SET is_active = ? WHERE id BETWEEN ? AND ?`,
+          [status, range.start, range.end]
+        );
+      }
+    });
 
-  db.all(query, [], (err, rows) => {
-    if (err) return res.status(500).json(err);
-    res.json(rows);
-  });
+    res.json({ message: "Actualización masiva completada" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 module.exports = router;
