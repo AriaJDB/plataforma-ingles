@@ -70,7 +70,8 @@ db.serialize(() => {
     CREATE TABLE IF NOT EXISTS students (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       firstName TEXT,
-      lastName TEXT
+      lastName TEXT,
+      is_active INTEGER DEFAULT 1
     )
   `);
 

@@ -8,7 +8,6 @@ export default function TeamGenerator() {
   const [groupSize, setGroupSize] = useState(2);
   const [teams, setTeams] = useState([]);
 
-  // Cargar estudiantes al montar el componente
   useEffect(() => {
     fetch(`${API}/students`)
       .then(res => res.json())
@@ -17,12 +16,18 @@ export default function TeamGenerator() {
   }, []);
 
   const generateTeams = () => {
-    if (students.length === 0) return alert("No hay estudiantes registrados");
+    const activeStudents = students.filter(s => s.is_active === 1);
 
-    // 1. Clonar y mezclar lista (Fisher-Yates Shuffle)
-    let shuffled = [...students].sort(() => Math.random() - 0.5);
+    if (activeStudents.length === 0) {
+      return alert("No hay estudiantes activos para formar equipos");
+    }
+
+    if (activeStudents.length < groupSize) {
+      return alert(`Solo hay ${activeStudents.length} alumnos activos. Elige un tamaño de grupo menor.`);
+    }
+
+    let shuffled = [...activeStudents].sort(() => Math.random() - 0.5);
     
-    // 2. Agrupar
     const result = [];
     for (let i = 0; i < shuffled.length; i += groupSize) {
       result.push(shuffled.slice(i, i + groupSize));
@@ -34,7 +39,7 @@ export default function TeamGenerator() {
     <div className="admin-container">
       <header className="admin-header">
         <h1>Formar Equipos Aleatorios</h1>
-        <p>Configura cuántos niños quieres por equipo y deja que el sistema los mezcle.</p>
+        <p>Solo se incluirán los estudiantes marcados como <strong>ACTIVOS</strong>.</p>
       </header>
 
       <div className="stat-card" style={{ display: 'flex', gap: '20px', alignItems: 'center', marginBottom: '30px' }}>
@@ -43,11 +48,14 @@ export default function TeamGenerator() {
           <input 
             type="number" 
             min="2" 
-            max={students.length} 
+            max={students.filter(s => s.is_active === 1).length} // Ajuste del max dinámico
             value={groupSize} 
             onChange={(e) => setGroupSize(parseInt(e.target.value))}
             style={{ width: '60px', padding: '8px', marginLeft: '10px' }}
           />
+          <small style={{ marginLeft: '10px', color: '#666' }}>
+            ({students.filter(s => s.is_active === 1).length} activos)
+          </small>
         </div>
         <button onClick={generateTeams} className="apply-btn" style={{ margin: 0 }}>
           Generar Equipos ✨

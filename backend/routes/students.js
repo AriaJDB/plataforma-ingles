@@ -3,7 +3,6 @@ const db = require("../db");
 
 const router = express.Router();
 
-// GET: Obtener todos los alumnos
 router.get("/", (req, res) => {
   db.all("SELECT * FROM students ORDER BY lastName ASC", [], (err, rows) => {
     if (err) return res.status(500).json(err);
@@ -11,7 +10,6 @@ router.get("/", (req, res) => {
   });
 });
 
-// POST: Crear nuevo alumno
 router.post("/", (req, res) => {
   const { firstName, lastName, is_active } = req.body;
   const firstNameUpper = (firstName || "").toUpperCase();
@@ -27,14 +25,19 @@ router.post("/", (req, res) => {
   );
 });
 
-// PUT: Editar alumno existente
 router.put("/:id", (req, res) => {
   const { firstName, lastName, is_active } = req.body;
   const { id } = req.params;
+  const statusToSave = (is_active !== undefined) ? is_active : 1;
 
   db.run(
     "UPDATE students SET firstName = ?, lastName = ?, is_active = ? WHERE id = ?",
-    [(firstName || "").toUpperCase(), (lastName || "").toUpperCase(), is_active || 1, id],
+    [
+      (firstName || "").toUpperCase(), 
+      (lastName || "").toUpperCase(), 
+      statusToSave, 
+      id
+    ],
     function (err) {
       if (err) return res.status(500).json(err);
       
@@ -47,7 +50,6 @@ router.put("/:id", (req, res) => {
   );
 });
 
-// DELETE: Eliminar alumno
 router.delete("/:id", (req, res) => {
   db.run("DELETE FROM students WHERE id = ?", [req.params.id], function (err) {
     if (err) return res.status(500).json(err);

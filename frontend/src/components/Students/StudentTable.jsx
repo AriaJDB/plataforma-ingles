@@ -20,21 +20,23 @@ export default function StudentTable({ refreshTrigger }) {
 
   const startEdit = s => {
     setEditingId(s.id);
-    setEditData({ 
-      firstName: s.firstName || "", 
-      lastName: s.lastName || "" 
+    setEditData({
+      ...s,
+      firstName: s.firstName || "",
+      lastName: s.lastName || "",
+      is_active: s.is_active
     });
   };
 
   const saveEdit = async () => {
     try {
-      // Usamos JSON en lugar de FormData ya que no hay imágenes
       const res = await fetch(`${API}/students/${editingId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           firstName: editData.firstName.toUpperCase(),
-          lastName: editData.lastName.toUpperCase()
+          lastName: editData.lastName.toUpperCase(),
+          is_active: editData.is_active
         })
       });
 
@@ -62,21 +64,21 @@ export default function StudentTable({ refreshTrigger }) {
         {students.map(s => (
           <tr key={s.id}>
             <td>{s.id}</td>
-            
+
             <td>
               {editingId === s.id ? (
-                <input 
-                  value={editData.firstName} 
-                  onChange={e => setEditData({...editData, firstName: e.target.value.toUpperCase()})}
+                <input
+                  value={editData.firstName}
+                  onChange={e => setEditData({ ...editData, firstName: e.target.value.toUpperCase() })}
                 />
               ) : s.firstName}
             </td>
-            
+
             <td>
               {editingId === s.id ? (
-                <input 
-                  value={editData.lastName} 
-                  onChange={e => setEditData({...editData, lastName: e.target.value.toUpperCase()})}
+                <input
+                  value={editData.lastName}
+                  onChange={e => setEditData({ ...editData, lastName: e.target.value.toUpperCase() })}
                 />
               ) : s.lastName}
             </td>
@@ -93,19 +95,19 @@ export default function StudentTable({ refreshTrigger }) {
             <td>
               {editingId === s.id ? (
                 <>
-                  <button onClick={saveEdit}>Save</button>
-                  <button onClick={() => setEditingId(null)}>Cancel</button>
+                  <button className="save-btn" onClick={saveEdit}>Save</button>
+                  <button className="delete-btn" onClick={() => setEditingId(null)}>Cancel</button>
                 </>
               ) : (
                 <>
                   <button className="edit-btn" onClick={() => startEdit(s)}>Edit</button>
-                  <button 
-                    className="delete-btn" 
-                    onClick={async () => { 
-                      if(window.confirm(`¿Eliminar a ${s.firstName} ${s.lastName}?`)) { 
-                        await fetch(`${API}/students/${s.id}`, { method: "DELETE" }); 
-                        load(); 
-                      } 
+                  <button
+                    className="delete-btn"
+                    onClick={async () => {
+                      if (window.confirm(`¿Eliminar a ${s.firstName} ${s.lastName}?`)) {
+                        await fetch(`${API}/students/${s.id}`, { method: "DELETE" });
+                        load();
+                      }
                     }}
                   >
                     Delete
