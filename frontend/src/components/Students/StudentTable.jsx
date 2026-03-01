@@ -54,8 +54,8 @@ export default function StudentTable({ refreshTrigger }) {
       <thead>
         <tr>
           <th>ID</th>
-          <th>Nombre</th>
           <th>Apellido</th>
+          <th>Nombre</th>
           <th>Status</th>
           <th>Acciones</th>
         </tr>
@@ -68,19 +68,19 @@ export default function StudentTable({ refreshTrigger }) {
             <td>
               {editingId === s.id ? (
                 <input
-                  value={editData.firstName}
-                  onChange={e => setEditData({ ...editData, firstName: e.target.value.toUpperCase() })}
+                  value={editData.lastName}
+                  onChange={e => setEditData({ ...editData, lastName: e.target.value.toUpperCase() })}
                 />
-              ) : s.firstName}
+              ) : s.lastName}
             </td>
 
             <td>
               {editingId === s.id ? (
                 <input
-                  value={editData.lastName}
-                  onChange={e => setEditData({ ...editData, lastName: e.target.value.toUpperCase() })}
+                  value={editData.firstName}
+                  onChange={e => setEditData({ ...editData, firstName: e.target.value.toUpperCase() })}
                 />
-              ) : s.lastName}
+              ) : s.firstName}
             </td>
 
             <td>

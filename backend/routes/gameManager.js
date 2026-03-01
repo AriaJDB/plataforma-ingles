@@ -58,4 +58,36 @@ router.put("/bulk-update", async (req, res) => {
   }
 });
 
+// GET: Obtener todas las palabras activas para los juegos
+router.get("/active-words", async (req, res) => {
+  const queries = {
+    book: "SELECT * FROM book_words WHERE is_active = 1",
+    verbs: "SELECT * FROM verbs WHERE is_active = 1",
+    spelling: "SELECT * FROM spelling_words WHERE is_active = 1",
+    nouns: "SELECT * FROM nouns WHERE is_active = 1",
+    adjectives: "SELECT * FROM adjectives WHERE is_active = 1"
+  };
+
+  try {
+    const [book, verbs, spelling, nouns, adjectives] = await Promise.all([
+      new Promise((resolve, reject) => db.all(queries.book, (err, rows) => err ? reject(err) : resolve(rows))),
+      new Promise((resolve, reject) => db.all(queries.verbs, (err, rows) => err ? reject(err) : resolve(rows))),
+      new Promise((resolve, reject) => db.all(queries.spelling, (err, rows) => err ? reject(err) : resolve(rows))),
+      new Promise((resolve, reject) => db.all(queries.nouns, (err, rows) => err ? reject(err) : resolve(rows))),
+      new Promise((resolve, reject) => db.all(queries.adjectives, (err, rows) => err ? reject(err) : resolve(rows)))
+    ]);
+
+    res.json({
+      book,
+      verbs,
+      spelling,
+      nouns,
+      adjectives
+    });
+  } catch (error) {
+    console.error("Error al obtener palabras activas:", error);
+    res.status(500).json({ error: "Error al cargar las palabras del juego" });
+  }
+});
+
 module.exports = router;

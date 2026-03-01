@@ -25,21 +25,38 @@ export default function GameWordManager() {
   const months = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
 
   const handleApply = async () => {
+  try {
     const response = await fetch(`${API}/game-manager/bulk-update`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status: globalStatus, tables: selectedTables, bookFilters: { ...bookFilters, useRange }, idFilters, verbType })
+      body: JSON.stringify({ 
+        status: globalStatus, 
+        tables: selectedTables, 
+        bookFilters: { ...bookFilters, useRange }, 
+        idFilters, 
+        verbType 
+      })
     });
-    if (response.ok) alert("Done!");
-  };
+    
+    if (response.ok) {
+      alert("¡Cambios aplicados con éxito!");
+    } else {
+      const errorData = await response.json();
+      alert("Error del servidor: " + errorData.error);
+    }
+  } catch (error) {
+    console.error("Error en la petición:", error);
+    alert("No se pudo conectar con el servidor. Verifica que el backend esté corriendo en el puerto 3001.");
+  }
+};
 
   return (
     <div className="admin-container">
       <div className="stat-card" style={{ marginBottom: "20px", display: "flex", alignItems: "center", gap: "20px" }}>
         <h3>Estado a aplicar:</h3>
         <select value={globalStatus} onChange={e => setGlobalStatus(parseInt(e.target.value))}>
-          <option value={1}>ACTIVO</option>
-          <option value={0}>INACTIVO</option>
+          <option value={1}>Active</option>
+          <option value={0}>Inactive</option>
         </select>
       </div>
 

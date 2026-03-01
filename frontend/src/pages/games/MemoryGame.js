@@ -21,53 +21,76 @@ export default function MemoryGame() {
   const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const loadGame = async () => {
-    try {
-      const res = await fetch(`${API}/game-manager/active-words`);
-      const data = await res.json();
+  try {
+    console.log("Iniciando carga de palabras...");
+    const res = await fetch(`${API}/game-manager/active-words`);
+    const data = await res.json();
+    
+    console.log("Datos crudos del backend:", data);
 
-      if (data.length < 6) {
-        alert("No hay suficientes palabras activas para jugar. Activa al menos 6 en el panel de control.");
-        return;
-      }
+    // Mapeo ultra-seguro verificando nombres de columnas
+    const allActiveWords = [
+      ...(data.book || []).map(w => ({ id: w.id, english: w.word || w.english, folder: 'book' })),
+      ...(data.verbs || []).map(w => ({ id: w.id, english: w.present || w.english, folder: 'verbs' })),
+      ...(data.spelling || []).map(w => ({ id: w.id, english: w.word || w.english, folder: 'spelling' })),
+      ...(data.nouns || []).map(w => ({ id: w.id, english: w.word || w.english, folder: 'nouns' })),
+      ...(data.adjectives || []).map(w => ({ id: w.id, english: w.word || w.english, folder: 'adjectives' }))
+    ];
 
-      const shuffled = [...data].sort(() => 0.5 - Math.random());
-      const selectedWords = shuffled.slice(0, 6);
+    console.log("Palabras procesadas (aplanadas):", allActiveWords);
 
-      let gameCards = [];
+    if (allActiveWords.length < 6) {
+      alert(`Solo hay ${allActiveWords.length} palabras activas. Necesitas al menos 6.`);
+      return;
+    }
 
-      selectedWords.forEach((word) => {
-        // Carta de Texto
-        gameCards.push({
-          id: `${word.folder}_${word.id}_word`,
-          pairId: `${word.folder}_${word.id}`,
-          type: "word",
-          value: word.english,
-          folder: word.folder,
-        });
+    // Mezclar y seleccionar 6
+    const selectedWords = [...allActiveWords]
+      .sort(() => 0.5 - Math.random())
+      .slice(0, 6);
 
-        // Carta de Imagen
-        gameCards.push({
-          id: `${word.folder}_${word.id}_img`,
-          pairId: `${word.folder}_${word.id}`,
-          type: "image",
-          value: word.english,
-          folder: word.folder,
-        });
+    let gameCards = [];
+    selectedWords.forEach((word) => {
+      const pairId = `${word.folder}_${word.id}`;
+      
+      // Carta de Texto
+      gameCards.push({
+        id: `${pairId}_word`,
+        pairId: pairId,
+        type: "word",
+        value: word.english, 
+        folder: word.folder,
       });
 
-      gameCards.sort(() => 0.5 - Math.random());
+      // Carta de Imagen
+      gameCards.push({
+        id: `${pairId}_img`,
+        pairId: pairId,
+        type: "image",
+        value: word.english,
+        folder: word.folder,
+      });
+    });
 
-      gameCards = gameCards.map((card, index) => ({
-        ...card,
-        number: index + 1,
-      }));
+    gameCards.sort(() => 0.5 - Math.random());
 
-      setCards(gameCards);
-      setWin(false);
-    } catch (error) {
-      console.error("Error al cargar el juego:", error);
-    }
-  };
+    const finalCards = gameCards.map((card, index) => ({
+      ...card,
+      number: index + 1,
+    }));
+
+    console.log("Cartas finales listas para el estado:", finalCards);
+
+    setCards(finalCards);
+    setMatched([]);
+    setSelected([]);
+    setWin(false);
+
+  } catch (error) {
+    console.error("Error crítico en loadGame:", error);
+    alert("Error de conexión con el servidor.");
+  }
+};
 
   const nuevoJuego = () => {
     setSelected([]);
@@ -173,9 +196,8 @@ export default function MemoryGame() {
           return (
             <div
               key={card.id}
-              className={`memory-card ${flipped ? "flipped" : ""} ${
-                isMatched ? "matched" : ""
-              }`}
+              className={`memory-card ${flipped ? "flipped" : ""} ${isMatched ? "matched" : ""
+                }`}
               onClick={() => selectCard(card)}
             >
               <div className="card-inner">
@@ -183,13 +205,15 @@ export default function MemoryGame() {
 
                 <div className="card-back">
                   {card.type === "word" ? (
-                    <span>{card.value}</span>
+                    /* Usamos card.value que contiene el texto en inglés */
+                    <span className="card-text">{card.value}</span>
                   ) : (
+                    /* Usamos card.folder y card.value para la ruta de la imagen */
                     <img
                       src={`${API}/images/${card.folder}/${card.value}.png`}
-                      alt=""
+                      alt={card.value}
                       onError={(e) => {
-                        e.target.src = `${API}/images/default.png`;
+                        e.target.src = `${API}/images/default.png`; // Imagen de respaldo
                       }}
                     />
                   )}
