@@ -38,11 +38,12 @@ router.post("/", upload.single("image"), (req, res) => {
 
   const english = req.body.english.toUpperCase();
   const spanish = req.body.spanish ? req.body.spanish.toUpperCase() : "";
+  const phonetic = req.body.phonetic ? req.body.phonetic.toUpperCase() : "";
   const is_active = 1;
 
   db.run(
-    "INSERT INTO spelling_words (english, spanish, is_active) VALUES (?, ?, ?)",
-    [english, spanish, is_active],
+    "INSERT INTO spelling_words (english, spanish, phonetic, is_active) VALUES (?, ?, ?, ?)",
+    [english, spanish, phonetic, is_active],
     function (err) {
       if (err) {
         if (req.file) fs.unlinkSync(req.file.path);
@@ -66,11 +67,12 @@ router.post("/", upload.single("image"), (req, res) => {
 router.put("/:id", upload.single("image"), (req, res) => {
   const english = req.body.english.toUpperCase();
   const spanish = req.body.spanish.toUpperCase();
+  const phonetic = req.body.phonetic.toUpperCase();
   const is_active = req.body.is_active;
 
   db.run(
-    "UPDATE spelling_words SET english=?, spanish=?, is_active=? WHERE id=?",
-    [english, spanish, is_active, req.params.id],
+    "UPDATE spelling_words SET english=?, spanish=?, phonetic=?, is_active=? WHERE id=?",
+    [english, spanish, phonetic, is_active, req.params.id],
     err => {
       if (err) {
         if (req.file) fs.unlinkSync(req.file.path);

@@ -1,0 +1,228 @@
+/* Contenedor del formulario */
+form {
+  background: #ffffff;
+  padding: 20px 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  
+  /* Forzamos el ancho al 98% de la pantalla */
+  width: 98%; 
+  max-width: 1600px; 
+  margin: 0 auto 30px auto;
+  
+  /* Layout de 4 o 5 columnas para reducir la altura */
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); 
+  gap: 15px;
+  align-items: end; /* Alinea los inputs con sus etiquetas abajo */
+  border: 1px solid #e1e4e8;
+  box-sizing: border-box;
+  margin: 20px;
+}
+
+form h3 {
+  grid-column: 1 / -1; /* Título a todo lo ancho */
+  margin: 0;
+  font-size: 1.3rem;
+  color: #1a1d21;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+form div {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centra la label y el input horizontalmente */
+  gap: 5px;
+}
+
+form label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #586069;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+
+
+/* Inputs y Selects */
+input[type="text"],
+input[type="number"],
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #d1d5da;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #444;
+  transition: border-color 0.2s;
+  width: 80%;
+}
+
+input[type="file"] {
+  grid-column: span 2;
+  border: 1px dashed #ccc;
+  background: #fafbfc;
+  width: 50%;
+  height: fit-content;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: #0366d6;
+  box-shadow: 0 0 0 3px rgba(3, 102, 214, 0.1);
+}
+
+/* Botón del Formulario */
+button[type="submit"] {
+  grid-column: span 2;
+  background-color: #2ea44f;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+button[type="submit"]:hover {
+  background-color: #2c974b;
+}
+
+@media (max-width: 1200px) {
+  form {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  form {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Estilos de la Tabla */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e1e4e8;
+}
+
+thead {
+  background-color: #f6f8fa;
+}
+
+th {
+  text-align: left;
+  padding: 12px 15px;
+  font-size: 13px;
+  text-transform: uppercase;
+  color: #586069;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid #e1e4e8;
+}
+
+td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #e1e4e8;
+  font-size: 14px;
+  color: #24292e;
+  vertical-align: middle;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+tr:hover {
+  background-color: #f9fafb;
+}
+
+/* Botones de acción en tabla */
+button {
+  padding: 6px 12px;
+  margin-right: 5px;
+  border-radius: 4px;
+  border: 1px solid #d1d5da;
+  background: white;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s;
+}
+
+button:hover {
+  background: #f3f4f6;
+  border-color: #1b1f2326;
+}
+
+/* Botón Eliminar específico */
+button.delete-btn {
+    color: white;
+  background-color: #d73a49;
+}
+
+button.delete-btn:hover {
+  background-color: #920a15;
+  color: white;
+}
+
+button.edit-btn {
+  color: white;
+  background-color: #dd950f;
+}
+
+button.edit-btn:hover {
+  background-color: #ac7002;
+  color: white;
+}
+
+/*PARA LAS VISTAS*/
+.word-views {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 0; /* Pegado a la línea divisoria */
+  padding-left: 5px;
+}
+
+.word-views button {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #586069;
+  background: #f6f8fa;
+  border: 1px solid #e1e4e8;
+  border-bottom: none; /* Para que parezca una pestaña */
+  border-radius: 6px 6px 0 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  top: 1px; /* Tapa ligeramente la línea de abajo si se ajusta el hr */
+}
+
+.word-views button:hover {
+  color: #24292e;
+  background: #eff2f5;
+}
+
+/* Clase para el botón activo */
+.word-views button.active {
+  background: #ffffff;
+  color: #0366d6;
+  border-color: #e1e4e8;
+  border-bottom: 4px solid #ffffff; /* Crea el efecto de estar abierto */
+  z-index: 2;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid #e1e4e8;
+  margin-top: 0;
+  margin-bottom: 30px;
+}

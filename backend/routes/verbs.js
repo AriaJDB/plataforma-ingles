@@ -27,31 +27,29 @@ router.get("/", (req, res) => {
 });
 
 router.post("/", upload.single("image"), (req, res) => {
-  if (!req.body || !req.body.present) {
-    return res.status(400).json({ error: "El campo 'present' es obligatorio" });
-  }
+  const { spanish, present, past_simple, past_participle, gerund, third_person, phonetic, type } = req.body;
 
-  const { spanish, present, past, past_participle, type, gerund, third_person, phonetic } = req.body;
+  if (!present) return res.status(400).json({ error: "Present es requerido" });
+
   const presentUpper = present.toUpperCase();
-  const typeUpper = type.toUpperCase();
 
   db.run(
-    `INSERT INTO verbs (spanish, present, past, past_participle, type, gerund, third_person, phonetic, is_active)
+    `INSERT INTO verbs (spanish, present, past_simple, past_participle, gerund, third_person, phonetic, type, is_active)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)`,
     [
       (spanish || "").toUpperCase(),
       presentUpper,
-      (past || "").toUpperCase(),
+      (past_simple || "").toUpperCase(),
       (past_participle || "").toUpperCase(),
-      typeUpper,
       (gerund || "").toUpperCase(),
       (third_person || "").toUpperCase(),
-      (phonetic || "").toUpperCase()
+      (phonetic || "").toUpperCase(),
+      (type || "REGULAR").toUpperCase()
     ],
     function (err) {
       if (err) {
         if (req.file) fs.unlinkSync(req.file.path);
-        return res.status(500).json(err);
+        return res.status(500).json({ error: err.message });
       }
 
       if (req.file) {
@@ -66,41 +64,37 @@ router.post("/", upload.single("image"), (req, res) => {
 });
 
 router.put("/:id", upload.single("image"), (req, res) => {
-  const { spanish, present, past, past_participle, type, gerund, third_person, phonetic, is_active } = req.body;
+  const { spanish, present, past_simple, past_participle, gerund, third_person, phonetic, type, is_active } = req.body;
 
-  // Validación preventiva: si present no existe, no podemos usar toUpperCase
   if (!present) return res.status(400).json({ error: "Present es requerido" });
 
   const presentUpper = present.toUpperCase();
-  const typeUpper = type.toUpperCase();
 
   db.run(
     `UPDATE verbs 
-     SET spanish=?, present=?, past=?, past_participle=?, type=?, gerund=?, third_person=?, phonetic=?, is_active=? 
+     SET spanish=?, present=?, past_simple=?, past_participle=?, gerund=?, third_person=?, phonetic=?, type=?, is_active=? 
      WHERE id=?`,
     [
       (spanish || "").toUpperCase(),
       presentUpper,
-      (past || "").toUpperCase(),
+      (past_simple || "").toUpperCase(),
       (past_participle || "").toUpperCase(),
-      typeUpper,
       (gerund || "").toUpperCase(),
       (third_person || "").toUpperCase(),
       (phonetic || "").toUpperCase(),
+      (type || "REGULAR").toUpperCase(),
       is_active,
       req.params.id
     ],
     function (err) {
-      if (err) return res.status(500).json(err);
+      if (err) return res.status(500).json({ error: err.message });
 
-      // Si se subió una nueva imagen al editar, la renombramos con el nombre (posiblemente nuevo) del verbo
       if (req.file) {
         const ext = path.extname(req.file.originalname);
         const newPath = path.join("images/verbs/", `${presentUpper}${ext}`);
         if (fs.existsSync(newPath)) fs.unlinkSync(newPath);
         fs.renameSync(req.file.path, newPath);
       }
-      
       res.json({ message: "UPDATED" });
     }
   );

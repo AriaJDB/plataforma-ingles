@@ -144,8 +144,8 @@ export default function NounTable({ refreshTrigger }) {
                 </>
               ) : (
                 <>
-                  <button onClick={() => startEdit(n)}>Edit</button>
-                  <button onClick={() => deleteNoun(n.id)}>Delete</button>
+                  <button className="edit-btn" onClick={() => startEdit(n)}>Edit</button>
+                  <button className="delete-btn" onClick={() => deleteNoun(n.id)}>Delete</button>
                 </>
               )}
             </td>

@@ -1,101 +1,87 @@
 import { useState } from "react";
-
 const API = "http://localhost:3001";
 
 export default function VerbForm({ onUpdate }) {
   const [spanish, setSpanish] = useState("");
   const [present, setPresent] = useState("");
-  const [past, setPast] = useState("");
+  const [pastSimple, setPastSimple] = useState("");
   const [pastParticiple, setPastParticiple] = useState("");
   const [gerund, setGerund] = useState("");
   const [thirdPerson, setThirdPerson] = useState("");
   const [phonetic, setPhonetic] = useState("");
-  const [type, setType] = useState("regular");
+  const [type, setType] = useState("REGULAR");
   const [image, setImage] = useState(null);
 
   const handleSubmit = async e => {
     e.preventDefault();
-
     const formData = new FormData();
     formData.append("spanish", spanish);
     formData.append("present", present);
-    formData.append("past", past);
-    formData.append("pastParticiple", pastParticiple);
+    formData.append("past_simple", pastSimple);
+    formData.append("past_participle", pastParticiple);
     formData.append("gerund", gerund);
-    formData.append("thirdPerson", thirdPerson);
+    formData.append("third_person", thirdPerson);
     formData.append("phonetic", phonetic);
     formData.append("type", type);
-
-    if (image) {
-      formData.append("image", image);
-    }
+    if (image) formData.append("image", image);
 
     try {
-      const response = await fetch(`${API}/verbs`, {
-        method: "POST",
-        body: formData,
-        // ¡NO PONGAS HEADERS AQUÍ! El navegador pondrá el Content-Type con el boundary correcto.
-      });
-
+      const response = await fetch(`${API}/verbs`, { method: "POST", body: formData });
       if (response.ok) {
-        // 1. Limpiamos los campos del formulario
-        setSpanish("");
-        setPresent("");
-        setPast("");
-        setPastParticiple("");
-        setGerund("");
-        setThirdPerson("");
-        setPhonetic("");
-        setType("regular");
+        setSpanish(""); setPresent(""); setPastSimple(""); setPastParticiple("");
+        setGerund(""); setThirdPerson(""); setPhonetic(""); setType("REGULAR");
         setImage(null);
-
-        // 2. Avisamos al padre que algo cambió sin recargar
         if (onUpdate) onUpdate();
       }
-      else {
-        const errorData = await response.json();
-        console.error("Error del servidor:", errorData);
-      }
-    } catch (err) {
-      console.error("Error de red:", err);
-    }
+    } catch (err) { console.error("Error de red:", err); }
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <h3>Agregar Verb</h3>
       <input
+        type="text"
         placeholder="Spanish"
         value={spanish}
         onChange={e => setSpanish(e.target.value)}
         required />
 
-      <input placeholder="Present"
+      <input
+        type="text"
+        placeholder="Present"
         value={present}
         onChange={e => setPresent(e.target.value)}
         required />
 
-      <input placeholder="Past"
-        value={past}
-        onChange={e => setPast(e.target.value)}
-        required />
+      <input
+        type="text"
+        placeholder="Past Simple"
+        value={pastSimple}
+        onChange={e => setPastSimple(e.target.value)} required />
 
-      <input placeholder="Past Participle"
+      <input
+        type="text"
+        placeholder="Past Participle"
         value={pastParticiple}
-        onChange={e => setPastParticiple(e.target.value)}
-        required />
+        onChange={e => setPastParticiple(e.target.value)} required />
 
-      <input placeholder="Gerund"
+      <input
+        type="text"
+        placeholder="Gerund"
         value={gerund}
         onChange={e => setGerund(e.target.value)}
         required />
 
-      <input placeholder="Third Person"
+      <input
+        type="text"
+        placeholder="Third Person"
         value={thirdPerson}
         onChange={e => setThirdPerson(e.target.value)}
         required />
 
-      <input placeholder="Phonetic"
+      <input
+        type="text"
+        placeholder="Phonetic"
         value={phonetic}
         onChange={e => setPhonetic(e.target.value)}
         required />
@@ -104,8 +90,7 @@ export default function VerbForm({ onUpdate }) {
         <option value="REGULAR">REGULAR</option>
         <option value="IRREGULAR">IRREGULAR</option>
       </select>
-      <input type="file" accept="image/*"
-        onChange={e => setImage(e.target.files[0])} />
+      <input type="file" accept="image/*" onChange={e => setImage(e.target.files[0])} />
       <button type="submit">Agregar</button>
     </form>
   );

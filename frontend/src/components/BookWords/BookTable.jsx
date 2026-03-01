@@ -225,8 +225,8 @@ export default function BookTable({ refreshTrigger }) {
                 </>
               ) : (
                 <>
-                  <button onClick={() => startEdit(w)}>Edit</button>
-                  <button onClick={() => deleteWord(w.id)}>Delete</button>
+                  <button className="edit-btn" onClick={() => startEdit(w)}>Edit</button>
+                  <button className="delete-btn" onClick={() => deleteWord(w.id)}>Delete</button>
                 </>
               )}
             </td>

@@ -26,6 +26,7 @@ export default function SpellingTable({ refreshTrigger }) {
     const formData = new FormData();
     formData.append("english", editData.english.toUpperCase());
     formData.append("spanish", editData.spanish.toUpperCase());
+    formData.append("phonetic", editData.phonetic.toUpperCase());
     formData.append("is_active", editData.is_active);
 
     if (editData.image) formData.append("image", editData.image);
@@ -53,6 +54,7 @@ export default function SpellingTable({ refreshTrigger }) {
           <th>ID</th>
           <th>English</th>
           <th>Spanish</th>
+          <th>Phonetic</th>
           <th>Status</th>
           <th>Actions</th>
         </tr>
@@ -78,6 +80,13 @@ export default function SpellingTable({ refreshTrigger }) {
 
             <td>
               {editingId === w.id ? (
+                <input value={editData.phonetic}
+                  onChange={e => setEditData({ ...editData, phonetic: e.target.value })} />
+              ) : w.phonetic}
+            </td>
+
+            <td>
+              {editingId === w.id ? (
                 <select value={editData.is_active}
                   onChange={e => setEditData({ ...editData, is_active: parseInt(e.target.value) })}>
                   <option value={1}>Active</option>
@@ -94,8 +103,8 @@ export default function SpellingTable({ refreshTrigger }) {
                 </>
               ) : (
                 <>
-                  <button onClick={() => startEdit(w)}>Edit</button>
-                  <button onClick={() => deleteWord(w.id)}>Delete</button>
+                  <button className="edit-btn" onClick={() => startEdit(w)}>Edit</button>
+                  <button className="delete-btn" onClick={() => deleteWord(w.id)}>Delete</button>
                 </>
               )}
             </td>

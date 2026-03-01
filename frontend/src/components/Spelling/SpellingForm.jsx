@@ -5,6 +5,7 @@ const API = "http://localhost:3001";
 export default function SpellingForm({ onUpdate }) {
   const [english, setEnglish] = useState("");
   const [spanish, setSpanish] = useState("");
+  const [phonetic, setPhonetic] = useState("");
   const [image, setImage] = useState(null);
 
   const handleSubmit = async e => {
@@ -14,6 +15,7 @@ export default function SpellingForm({ onUpdate }) {
     // Los campos de texto siempre antes que la imagen
     formData.append("english", english.toUpperCase());
     formData.append("spanish", spanish.toUpperCase());
+    formData.append("phonetic", phonetic.toUpperCase());
     formData.append("is_active", 1);
 
     if (image) {
@@ -29,6 +31,7 @@ export default function SpellingForm({ onUpdate }) {
       if (response.ok) {
         setSpanish("");
         setEnglish("");
+        setPhonetic("");
         setImage(null);
         if (onUpdate) onUpdate();
       } else {
@@ -46,6 +49,7 @@ export default function SpellingForm({ onUpdate }) {
       <h3>Agregar Spelling Word</h3>
 
       <input
+      type="text"
         placeholder="English"
         value={english}
         onChange={e => setEnglish(e.target.value)}
@@ -53,11 +57,19 @@ export default function SpellingForm({ onUpdate }) {
       />
 
       <input
+      type="text"
         placeholder="Spanish"
         value={spanish}
         onChange={e => setSpanish(e.target.value)}
         required
       />
+
+        <input
+          type="text"
+          placeholder="Phonetic"
+          value={phonetic}
+          onChange={e => setPhonetic(e.target.value)}
+        />
 
       <input
         type="file"

@@ -120,8 +120,8 @@ export default function AdjectiveTable({ refreshTrigger }) {
                 </>
               ) : (
                 <>
-                  <button onClick={() => startEdit(a)}>Edit</button>
-                  <button onClick={() => deleteAdjective(a.id)}>Delete</button>
+                  <button className="edit-btn" onClick={() => startEdit(a)}>Edit</button>
+                  <button className="delete-btn" onClick={() => deleteAdjective(a.id)}>Delete</button>
                 </>
               )}
             </td>
