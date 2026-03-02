@@ -9,7 +9,7 @@ const router = express.Router();
 // Configuración de Multer segura
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const dir = "images/words/";
+    const dir = "images/book/";
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
@@ -68,7 +68,7 @@ router.post("/", upload.single("image"), (req, res) => {
       if (req.file) {
         const ext = path.extname(req.file.originalname);
         const oldPath = req.file.path;
-        const newPath = path.join("images/words/", `${englishUpper}${ext}`);
+        const newPath = path.join("images/book/", `${englishUpper}${ext}`);
 
         if (fs.existsSync(newPath)) fs.unlinkSync(newPath);
         fs.renameSync(oldPath, newPath);
@@ -99,7 +99,7 @@ router.put("/:id", upload.single("image"), (req, res) => {
 
       if (req.file) {
         const ext = path.extname(req.file.originalname);
-        const newPath = path.join("images/words/", `${englishUpper}${ext}`);
+        const newPath = path.join("images/book/", `${englishUpper}${ext}`);
         if (fs.existsSync(newPath)) fs.unlinkSync(newPath);
         fs.renameSync(req.file.path, newPath);
       }

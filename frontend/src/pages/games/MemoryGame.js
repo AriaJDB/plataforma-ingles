@@ -21,76 +21,76 @@ export default function MemoryGame() {
   const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const loadGame = async () => {
-  try {
-    console.log("Iniciando carga de palabras...");
-    const res = await fetch(`${API}/game-manager/active-words`);
-    const data = await res.json();
-    
-    console.log("Datos crudos del backend:", data);
+    try {
+      console.log("Iniciando carga de palabras...");
+      const res = await fetch(`${API}/game-manager/active-words`);
+      const data = await res.json();
 
-    // Mapeo ultra-seguro verificando nombres de columnas
-    const allActiveWords = [
-      ...(data.book || []).map(w => ({ id: w.id, english: w.word || w.english, folder: 'book' })),
-      ...(data.verbs || []).map(w => ({ id: w.id, english: w.present || w.english, folder: 'verbs' })),
-      ...(data.spelling || []).map(w => ({ id: w.id, english: w.word || w.english, folder: 'spelling' })),
-      ...(data.nouns || []).map(w => ({ id: w.id, english: w.word || w.english, folder: 'nouns' })),
-      ...(data.adjectives || []).map(w => ({ id: w.id, english: w.word || w.english, folder: 'adjectives' }))
-    ];
+      console.log("Datos crudos del backend:", data);
 
-    console.log("Palabras procesadas (aplanadas):", allActiveWords);
+      // Mapeo ultra-seguro verificando nombres de columnas
+      const allActiveWords = [
+        ...(data.book || []).map(w => ({ id: w.id, english: w.word || w.english, folder: 'book' })),
+        ...(data.verbs || []).map(w => ({ id: w.id, english: w.present || w.english, folder: 'verbs' })),
+        ...(data.spelling || []).map(w => ({ id: w.id, english: w.word || w.english, folder: 'spelling' })),
+        ...(data.nouns || []).map(w => ({ id: w.id, english: w.word || w.english, folder: 'nouns' })),
+        ...(data.adjectives || []).map(w => ({ id: w.id, english: w.word || w.english, folder: 'adjectives' }))
+      ];
 
-    if (allActiveWords.length < 6) {
-      alert(`Solo hay ${allActiveWords.length} palabras activas. Necesitas al menos 6.`);
-      return;
+      console.log("Palabras procesadas (aplanadas):", allActiveWords);
+
+      if (allActiveWords.length < 6) {
+        alert(`Solo hay ${allActiveWords.length} palabras activas. Necesitas al menos 6.`);
+        return;
+      }
+
+      // Mezclar y seleccionar 6
+      const selectedWords = [...allActiveWords]
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 6);
+
+      let gameCards = [];
+      selectedWords.forEach((word) => {
+        const pairId = `${word.folder}_${word.id}`;
+
+        // Carta de Texto
+        gameCards.push({
+          id: `${pairId}_word`,
+          pairId: pairId,
+          type: "word",
+          value: word.english,
+          folder: word.folder,
+        });
+
+        // Carta de Imagen
+        gameCards.push({
+          id: `${pairId}_img`,
+          pairId: pairId,
+          type: "image",
+          value: word.english,
+          folder: word.folder,
+        });
+      });
+
+      gameCards.sort(() => 0.5 - Math.random());
+
+      const finalCards = gameCards.map((card, index) => ({
+        ...card,
+        number: index + 1,
+      }));
+
+      console.log("Cartas finales listas para el estado:", finalCards);
+
+      setCards(finalCards);
+      setMatched([]);
+      setSelected([]);
+      setWin(false);
+
+    } catch (error) {
+      console.error("Error crítico en loadGame:", error);
+      alert("Error de conexión con el servidor.");
     }
-
-    // Mezclar y seleccionar 6
-    const selectedWords = [...allActiveWords]
-      .sort(() => 0.5 - Math.random())
-      .slice(0, 6);
-
-    let gameCards = [];
-    selectedWords.forEach((word) => {
-      const pairId = `${word.folder}_${word.id}`;
-      
-      // Carta de Texto
-      gameCards.push({
-        id: `${pairId}_word`,
-        pairId: pairId,
-        type: "word",
-        value: word.english, 
-        folder: word.folder,
-      });
-
-      // Carta de Imagen
-      gameCards.push({
-        id: `${pairId}_img`,
-        pairId: pairId,
-        type: "image",
-        value: word.english,
-        folder: word.folder,
-      });
-    });
-
-    gameCards.sort(() => 0.5 - Math.random());
-
-    const finalCards = gameCards.map((card, index) => ({
-      ...card,
-      number: index + 1,
-    }));
-
-    console.log("Cartas finales listas para el estado:", finalCards);
-
-    setCards(finalCards);
-    setMatched([]);
-    setSelected([]);
-    setWin(false);
-
-  } catch (error) {
-    console.error("Error crítico en loadGame:", error);
-    alert("Error de conexión con el servidor.");
-  }
-};
+  };
 
   const nuevoJuego = () => {
     setSelected([]);
@@ -208,12 +208,17 @@ export default function MemoryGame() {
                     /* Usamos card.value que contiene el texto en inglés */
                     <span className="card-text">{card.value}</span>
                   ) : (
-                    /* Usamos card.folder y card.value para la ruta de la imagen */
                     <img
                       src={`${API}/images/${card.folder}/${card.value}.png`}
                       alt={card.value}
                       onError={(e) => {
-                        e.target.src = `${API}/images/default.png`; // Imagen de respaldo
+                        // Evita bucles infinitos si la imagen por defecto también falla
+                        if (e.target.src !== `${API}/images/default.png`) {
+                          e.target.src = `${API}/images/default.png`;
+                        } else {
+                          // Si todo falla, ocultamos la imagen o ponemos un placeholder de texto
+                          e.target.style.display = 'none';
+                        }
                       }}
                     />
                   )}
