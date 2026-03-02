@@ -95,3 +95,32 @@
 .game-card {
   animation: bounceIn 0.5s ease-out;
 }
+
+
+/* ... resto de tu CSS anterior ... */
+
+/* Estilo específico para la tarjeta de Unscramble */
+.game-card.unscramble {
+  /* Un gradiente naranja/rosa vibrante para diferenciarlo */
+  background: linear-gradient(135deg, #FF9966 0%, #FF5E62 100%);
+  
+  /* Sombra suave */
+  box-shadow: 0 10px 20px rgba(255, 94, 98, 0.3);
+  
+  /* Aseguramos que el texto se vea blanco */
+  color: white; 
+}
+
+/* Efecto al pasar el mouse por encima */
+.game-card.unscramble:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(255, 94, 98, 0.5);
+}
+
+/* Opcional: Si quieres que el ícono (🔠) tenga un tamaño específico o fondo */
+.game-card.unscramble .game-icon {
+  font-size: 3rem;
+  margin-bottom: 10px;
+  /* Sombra de texto para que el emoji resalte más */
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}

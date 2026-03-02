@@ -6,6 +6,7 @@ import Home from "./pages/Admin/Home";
 import Teams from "./pages/Admin/Teams";
 import MemoryGame from "./pages/games/MemoryGame";
 import SuperlativesGame from "./pages/games/SuperlativesGame";
+import UnscrambleGame from "./pages/games/UnscrambleGame";
 import GameSettings from "./pages/Admin/GameSettings";
 
 function App() {
@@ -24,7 +25,7 @@ function App() {
         {/* Rutas para los jueguitos */}
         <Route path="/memorama" element={<MemoryGame />} />
         <Route path="/superlatives" element={<SuperlativesGame />} />
-
+        <Route path="/unscramble" element={<UnscrambleGame />} />
 
         {/* Juegos futuros */}
         <Route path="/game1" element={<h2>Juego 1</h2>} />

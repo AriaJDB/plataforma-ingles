@@ -27,6 +27,12 @@ function Home() {
           <span className="game-name">Superlatives</span>
         </Link>
 
+        {/* NUEVO JUEGO AGREGADO */}
+        <Link to="/unscramble" className="game-card unscramble">
+          <div className="game-icon">🔠</div>
+          <span className="game-name">Unscramble</span>
+        </Link>
+
         {/* Ejemplo de cómo se verían los futuros juegos */}
         <Link to="/spelling" className="game-card spelling">
           <div className="game-icon">🐝</div>
