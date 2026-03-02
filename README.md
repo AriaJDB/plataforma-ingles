@@ -54,7 +54,9 @@ Notas:
 ```bash
 cd frontend
 npm install
+npm install canvas-confetti
 npm start
+
 ```
 
 - El frontend se ejecuta por defecto en `http://localhost:3000` y espera que el backend esté en `http://localhost:3001`.
